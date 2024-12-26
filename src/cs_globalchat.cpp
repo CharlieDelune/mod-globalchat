@@ -113,7 +113,7 @@ public:
         }
 
         sGlobalChatMgr->GlobalChatEnabled = true;
-        SendWorldText(LANG_GLOBALCHAT_STATE_ANNOUNCE_WORLD, playerName.c_str(), "enabled");
+        //sWorld->SendWorldText(LANG_GLOBALCHAT_STATE_ANNOUNCE_WORLD, playerName.c_str(), "enabled");
         LOG_INFO("module", "GlobalChat: Player {} enabled the GlobalChat.", playerName);
 
         return true;
@@ -135,7 +135,7 @@ public:
         }
 
         sGlobalChatMgr->GlobalChatEnabled = false;
-        SendWorldText(LANG_GLOBALCHAT_STATE_ANNOUNCE_WORLD, playerName.c_str(), "disabled");
+        //sWorld->SendWorldText(LANG_GLOBALCHAT_STATE_ANNOUNCE_WORLD, playerName.c_str(), "disabled");
         LOG_INFO("module", "GlobalChat: Player {} disabled the GlobalChat.", playerName);
 
         return true;
@@ -188,12 +188,12 @@ public:
 
             if (sGlobalChatMgr->AnnounceMutes)
             {
-                SendWorldText(LANG_GLOBALCHAT_PLAYER_BANNED_ANNOUNCE_WORLD, playerName.c_str(), target->GetName().c_str(), muteReasonStr.c_str());
+                //sWorld->SendWorldText(LANG_GLOBALCHAT_PLAYER_BANNED_ANNOUNCE_WORLD, playerName.c_str(), target->GetName().c_str(), muteReasonStr.c_str());
             }
             else
             {
                 ChatHandler(target->GetSession()).PSendSysMessage(LANG_GLOBALCHAT_BANNED_ANNOUNCE_SELF, muteReasonStr.c_str());
-                ChatHandler->SendGMText(LANG_GLOBALCHAT_PLAYER_BANNED_ANNOUNCE_WORLD, playerName.c_str(), target->GetName().c_str(), muteReasonStr.c_str());
+                //sWorld->SendGMText(LANG_GLOBALCHAT_PLAYER_BANNED_ANNOUNCE_WORLD, playerName.c_str(), target->GetName().c_str(), muteReasonStr.c_str());
             }
 
             return true;
@@ -205,12 +205,12 @@ public:
 
         if (sGlobalChatMgr->AnnounceMutes)
         {
-            SendWorldText(LANG_GLOBALCHAT_PLAYER_MUTED_ANNOUNCE_WORLD, playerName.c_str(), target->GetName().c_str(), secsToTimeString(durationSecs, true).c_str(), muteReasonStr.c_str());
+            //sWorld->SendWorldText(LANG_GLOBALCHAT_PLAYER_MUTED_ANNOUNCE_WORLD, playerName.c_str(), target->GetName().c_str(), secsToTimeString(durationSecs, true).c_str(), muteReasonStr.c_str());
         }
         else
         {
             ChatHandler(target->GetSession()).PSendSysMessage(LANG_GLOBALCHAT_MUTED_ANNOUNCE_SELF, secsToTimeString(durationSecs, true).c_str(), muteReasonStr.c_str());
-            ChatHandler->SendGMText(LANG_GLOBALCHAT_PLAYER_MUTED_ANNOUNCE_WORLD, playerName.c_str(), target->GetName().c_str(), secsToTimeString(durationSecs, true).c_str(), muteReasonStr.c_str());
+            //sWorld->SendGMText(LANG_GLOBALCHAT_PLAYER_MUTED_ANNOUNCE_WORLD, playerName.c_str(), target->GetName().c_str(), secsToTimeString(durationSecs, true).c_str(), muteReasonStr.c_str());
         }
 
         return true;
