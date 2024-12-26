@@ -849,7 +849,7 @@ void GlobalChatMgr::SendGlobalChat(WorldSession* session, const char* message, T
     {
         std::string adStr = secsToTimeString(MinPlayTime - player->GetTotalPlayedTime());
         std::string minTime = secsToTimeString(MinPlayTime);
-        session->SendNotification("You must have played at least %s to use the GlobalChat. %s remaining.", minTime.c_str(), adStr.c_str());
+        //session->SendNotification("You must have played at least %s to use the GlobalChat. %s remaining.", minTime.c_str(), adStr.c_str());
         return;
     }
 
