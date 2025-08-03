@@ -23,6 +23,7 @@
 #include "World.h"
 #include "GlobalChatMgr.h"
 #include "WorldSession.h"
+#include "WorldSessionMgr.h"
 
 DBCStorage<ChatProfanityEntry> sChatProfanityStore(ChatProfanityEntryfmt);
 
@@ -645,24 +646,27 @@ void GlobalChatMgr::SendToPlayers(std::string chatMessage, Player* player, TeamI
     LOG_DEBUG("module", "GlobalChat: Sending Message to Players.");
     std::string chatPrefix = GetChatPrefix();
     std::string gmChatPrefix = GetGMChatPrefix(teamId);
-    SessionMap sessions = sWorld->GetAllSessions();
-    for (SessionMap::iterator itr = sessions.begin(); itr != sessions.end(); ++itr)
-    {
-        if (!itr->second || !itr->second->GetPlayer() || !itr->second->GetPlayer()->IsInWorld())
-        {
-            continue;
-        }
 
-        Player* target = itr->second->GetPlayer();
+    auto const& sessions = sWorldSessionMgr->GetAllSessions();
+    for (auto const& itr : sessions)
+    {
+        WorldSession* session = itr.second;
+        if (!session)
+            continue;
+
+        Player* target = session->GetPlayer();
+        if (!target || !target->IsInWorld())
+            continue;
+
         ObjectGuid guid2 = target->GetGUID();
         std::string message;
 
         if (IsInChat(guid2))
         {
-            if (FactionSpecific && teamId != TEAM_NEUTRAL && itr->second->GetSecurity() > 0)
+            if (FactionSpecific && teamId != TEAM_NEUTRAL && session->GetSecurity() > 0)
             {
                 message = gmChatPrefix + " " + chatMessage;
-                sWorld->SendServerMessage(SERVER_MSG_STRING, message.c_str(), target);
+                ChatHandler(target->GetSession()).SendSysMessage(message.c_str());
                 continue;
             }
 
@@ -673,7 +677,7 @@ void GlobalChatMgr::SendToPlayers(std::string chatMessage, Player* player, TeamI
             if (!FactionSpecific || teamId == TEAM_NEUTRAL || teamId == target->GetTeamId())
             {
                 message = chatPrefix + " " + chatMessage;
-                sWorld->SendServerMessage(SERVER_MSG_STRING, message.c_str(), target);
+                ChatHandler(target->GetSession()).SendSysMessage(message.c_str());
             }
         }
     }
